@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication3
+{
+	class Program {
+		//int
+
+		static void Main(string[] args)
+		{
+			//declares
+
+			int carhp = 20;
+			int carhpfull = 100;
+			int carxp = 10;
+			int carxpfull = 100;
+			int carlVl = 1;
+			int carlvlmax = 100;
+			int move_left_right = 10;
+			int move_up_down = 10;
+			int game_over = 0;
+			///-----------------------------------------
+
+
+
+			drawgui(carhp, carhpfull, carxp, carxpfull, carlVl, carlvlmax);
+
+			while (game_over == 0)
+			{
+				ConsoleKeyInfo keyinfo;
+				keyinfo = Console.ReadKey(true);
+				switch (keyinfo.Key)
+				{
+					case ConsoleKey.RightArrow:
+					move_left_right++;
+					Console.SetCursorPosition(move_left_right, move_up_down);
+					Console.WriteLine("x");
+					break;
+
+				}
+
+			}
+
+
+
+
+
+
+
+			Console.ReadLine();
+			//end----------------------------
+
+
+
+		} static void drawgui(int carhp,int carhpfull,int carxp, int carxpfull, int carlVl, int carlvlmax ) {
+
+
+
+			// draw gui
+			Console.SetCursorPosition(0, 0);
+			for(int i=0; i=> Console.BufferWidth; i++){ Console.WriteLine("_");}
+
+			/*
+			Console.WriteLine("___________________________________________________________________________________________________________________");
+			Console.SetCursorPosition(1, 1);
+			Console.WriteLine("name:xander");
+			Console.SetCursorPosition(53, 1);
+			Console.WriteLine("hp:{0}", carhp);
+			Console.SetCursorPosition(10, 1);
+			Console.WriteLine("xp:{0}", carxp);
+			Console.SetCursorPosition(52, 2);
+			Console.WriteLine("levle:{0}", carlVl);
+			Console.SetCursorPosition(0, 3);
+			Console.WriteLine("________________________________________________________________________________________________________________________");
+*/
+		}
+	}
+}
+
