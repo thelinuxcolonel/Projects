@@ -32,6 +32,27 @@ namespace ConsoleApplication3
 
             drawgui(carhp, carhpfull, carxp, carxpfull, carlVl, carlvlmax);
 
+           
+        }
+        static void drawgui(int carhp, int carhpfull, int carxp, int carxpfull, int carlVl, int carlvlmax)
+        {
+            // draw gui
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("________________________________________________________________________________________________________________________");
+            Console.SetCursorPosition(1, 1);
+            Console.WriteLine("name:xander");
+            Console.SetCursorPosition(53, 1);
+            Console.WriteLine("hp:{0}", carhp);
+            Console.SetCursorPosition(113, 1);
+            Console.WriteLine("xp:{0}", carxp);
+            Console.SetCursorPosition(52, 2);
+            Console.WriteLine("levle:{0}", carlVl);
+            Console.SetCursorPosition(0, 3);
+            Console.WriteLine("________________________________________________________________________________________________________________________");
+
+        }
+        static void carmove (int move_left_right, int move_up_down)
+        {
             while (game_over == 0)
             {
                 ConsoleKeyInfo keyinfo;
@@ -100,38 +121,7 @@ namespace ConsoleApplication3
 
             }
 
-
         }
-        static void drawgui(int carhp, int carhpfull, int carxp, int carxpfull, int carlVl, int carlvlmax)
-        {
-            // draw gui
-            Console.SetCursorPosition(0, 0);
-            Console.WriteLine("________________________________________________________________________________________________________________________");
-            Console.SetCursorPosition(1, 1);
-            Console.WriteLine("name:xander");
-            Console.SetCursorPosition(53, 1);
-            Console.WriteLine("hp:{0}", carhp);
-            Console.SetCursorPosition(113, 1);
-            Console.WriteLine("xp:{0}", carxp);
-            Console.SetCursorPosition(52, 2);
-            Console.WriteLine("levle:{0}", carlVl);
-            Console.SetCursorPosition(0, 3);
-            Console.WriteLine("________________________________________________________________________________________________________________________");
-
-        }
-
     }
-
-}
-static void carmove(int moveleftright, int move_up_down)
-{
-    {
-        {
-
-
-
-
-       }
-   }
-}
+  }
 
