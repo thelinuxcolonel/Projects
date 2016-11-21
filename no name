@@ -25,14 +25,19 @@ namespace ConsoleApplication3
             int game_over = 0;
 
             ///-----------------------------------------
-
+           
             Console.SetCursorPosition(23, 28);
             Console.WriteLine("e");
 
-
-            drawgui(carhp, carhpfull, carxp, carxpfull, carlVl, carlvlmax);
-
            
+            drawgui(carhp, carhpfull, carxp, carxpfull, carlVl, carlvlmax);
+            while (game_over == 0) ;
+            carmove( move_left_right, move_up_down);
+
+            
+
+
+
         }
         static void drawgui(int carhp, int carhpfull, int carxp, int carxpfull, int carlVl, int carlvlmax)
         {
@@ -53,7 +58,7 @@ namespace ConsoleApplication3
         }
         static void carmove (int move_left_right, int move_up_down)
         {
-            while (game_over == 0)
+            
             {
                 ConsoleKeyInfo keyinfo;
                 keyinfo = Console.ReadKey(true);
@@ -122,6 +127,44 @@ namespace ConsoleApplication3
             }
 
         }
-    }
+
+     }
+
   }
+
+   
+
+
+
+
+
+
+
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
