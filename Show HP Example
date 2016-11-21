@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication3
+{
+	class Program {
+		//int
+
+		static void Main(string[] args)
+		{
+			//declares
+			int carhp = 80;
+			int carhpfull = 100;
+			int carxp = 10;
+			int carxpfull = 100;
+			int carlVl = 1;
+			int carlvlmax = 100;
+			//int move_left_right = 10;
+			//int move_up_down = 10;
+			bool game_over = false;
+			///-----------------------------------------
+		
+			Console.CursorVisible = false;///  this will make it so the cursor doesn't blink at you.
+
+			drawgui(carhp, carhpfull, carxp, carxpfull, carlVl, carlvlmax);
+
+			#region MainLoop // The main game loop
+
+			while (game_over == false)
+			{
+			
+
+				/*
+				ConsoleKeyInfo keyinfo;
+				keyinfo = Console.ReadKey(true);
+				switch (keyinfo.Key)
+				{
+					case ConsoleKey.RightArrow:
+					move_left_right++;
+					Console.SetCursorPosition(move_left_right, move_up_down);
+					Console.WriteLine("x");
+					break;
+
+				}
+			*/
+
+			}
+
+			#endregion
+
+
+			//end----------------------------
+
+
+
+		} static void drawgui(int carhp,int carhpfull,int carxp, int carxpfull, int carlVl, int carlvlmax ) {
+			// draw gui
+
+
+			Console.SetCursorPosition (0, 0);
+			for (int i=0; i < Console.BufferWidth; i++) { 
+				Console.SetCursorPosition (i, 0);
+				Console.WriteLine ("_");
+			}
+
+			Console.SetCursorPosition (0, 1);
+			Console.WriteLine ("HP: " + carhp + "/" + carhpfull);
+
+			Console.SetCursorPosition (20, 1);
+			Console.WriteLine ("XP: " + carhp + "/" + carhpfull);
+		
+			Console.SetCursorPosition (40, 1);
+			Console.WriteLine ("Level: " + carhp + "/" + carhpfull);
+
+			Console.SetCursorPosition (0, 0);
+			for (int i=0; i < Console.BufferWidth; i++) { 
+				Console.SetCursorPosition (i, 3);
+				Console.WriteLine ("_");
+			}
+
+			Console.SetCursorPosition (0, 2);
+
+
+			//  **this should all go in its own function eventually, like:  static void showHPs(currenthp, maxhp){}
+
+			//  This sets J to 0; then says keep looping while j<carhpfull; and increment J each time by 
+			//  (carhp/10)  which is 1/10 of carHPfull
+			//  That means that the loop will repeat and J will go from 0 to carhpfull in a total of 10 steps, 
+			for (int j=0; j<carhpfull; j=j+(carhpfull/10)) {
+					
+
+				if ( Convert.ToInt64(j)<carhp){
+					//if J "the current cursor spot" is less than currenthp
+					//the convert.toint is because carfullhp/10 may not end up as a whole number
+
+					//Change the color and write a blank
+					Console.BackgroundColor = ConsoleColor.Green;
+					Console.Write (" ");
+				
+				} else {
+					//Otherwise, if J "the current spot" is more than the current HP
+
+					//change the color and write a blank.
+					Console.BackgroundColor = ConsoleColor.Red;
+					Console.Write (" ");
+				}
+				Console.BackgroundColor = ConsoleColor.Black;
+
+			}
+			///   *************
+			///   Try changing the current HP and watch the bar.  Keep in mind, it's rounds to the nearest 10%
+
+
+			/*
+			Console.WriteLine("___________________________________________________________________________________________________________________");
+			Console.SetCursorPosition(1, 1);
+			Console.WriteLine("name:xander");
+			Console.SetCursorPosition(53, 1);
+			Console.WriteLine("hp:{0}", carhp);
+			Console.SetCursorPosition(10, 1);
+			Console.WriteLine("xp:{0}", carxp);
+			Console.SetCursorPosition(52, 2);
+			Console.WriteLine("levle:{0}", carlVl);
+			Console.SetCursorPosition(0, 3);
+			Console.WriteLine("________________________________________________________________________________________________________________________");
+*/
+		}
+	}
+}
