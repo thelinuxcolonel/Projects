@@ -30,6 +30,7 @@ Hopefully, this will help simplify things.  In general, if you repeat code, you 
 
 
 public static void PrintChar (string stChar, int charXpos, int charYpos, ConsoleColor charcolor = ConsoleColor.White) {
+			Console.ForegroundColor = charcolor;
 			Console.SetCursorPosition (charXpos, charYpos);
 			Console.Write (stChar);
 }
