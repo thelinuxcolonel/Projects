@@ -1,0 +1,228 @@
+using System;
+
+namespace Testmove
+{
+	public enum enDirections {None, North, East, South, West}; // you can declare something as an enumDirections
+																
+	public struct stTile{  //  
+		public string Symbol;   
+		public bool IsWalkable;
+		public bool IsOccupied;
+		public bool HasLoot;
+		public int LootReference;
+		public int OccupantReference;
+	}
+
+
+	class MainClass
+
+	{
+		/// Static Declares **********
+
+		static bool gameOn = true;
+		static CharClass chPlayer = new CharClass ();
+		//static CharClass[] chMob = new CharClass[];
+
+		static int xWidth = Console.WindowWidth;
+		static int yHeight = Console.WindowHeight;
+		static int xLeft = 0;
+		static int yTop = 2;
+		static stTile[,] Tiles = new stTile[xWidth,yHeight];
+
+		//static CharClass chMob();
+
+
+		public static void Main (string[] args)  ////////////BEGIN
+		{
+			int Timer = 0;
+			int MsgDelay = 5000000;
+			Initialize();
+			LoadTiles (Tiles);
+			UpdateDisplay(Tiles);
+			PrintChar (chPlayer);
+
+
+
+			while (gameOn==true) {//MAIN LOOP///////////////
+
+				if (Console.KeyAvailable) {
+					//Stuff here happens when key is pressed
+					PressKey(Console.ReadKey (true));  ////  Read Keypress without printing it, send to PressKey
+
+
+
+
+				}
+				///Stuff here happens in real time
+				Timer++;
+			if (Timer > MsgDelay){  /// When 'MsgDelay' number of loops have been executed:
+					Timer = 0;      ///  reset the timer and clear the message row.
+					PrintMess ("");
+					PrintMess2 ("");
+				}
+			}////////////////////////////////////////////
+			EndofGame ();
+			/////END///////////
+		
+		
+		
+		
+		
+		
+		}
+
+
+		///  PRESKEY *********************************************************
+		public static void PressKey(ConsoleKeyInfo keyInfo){  //read key input and pass it along.
+			switch (keyInfo.Key) {
+			case ConsoleKey.Escape:
+				gameOn = false;
+				break;
+			case ConsoleKey.LeftArrow:
+				MoveChar (chPlayer, enDirections.West);    ///  the MoveChar function takes (CharClass, and enumDirections)
+				break;										//  for arguments
+			case ConsoleKey.RightArrow:
+				MoveChar (chPlayer, enDirections.East);
+				break;
+			case ConsoleKey.DownArrow:
+				MoveChar (chPlayer, enDirections.South);
+				break;
+			case ConsoleKey.UpArrow:
+				MoveChar (chPlayer, enDirections.North);
+				break;
+			case ConsoleKey.A :
+				PrintMess ("You can't attack, I haven't coded it yet.", ConsoleColor.Cyan);
+				break;
+			case ConsoleKey.E:
+				Tiles [chPlayer.Xpos, chPlayer.Ypos].Symbol = " ";
+				PrintMess ("Yummy, you ate a dot!", ConsoleColor.Red);
+				break;
+		
+			
+			}//**********************END PRESSKEY************************************
+		}
+
+
+		//  **************************  UPDATE DISPLAY ***********
+		public static void UpdateDisplay(stTile[,] Tile){  // redraws entire map
+			for (int i = 0; i< Tile.GetLength(0); i++){
+				for (int j = 0; j< Tile.GetLength(1); j++) { 
+					PrintChar (Tile [i, j].Symbol, i, j);
+				}
+			}
+		}//************************************************************
+
+
+
+
+	
+
+
+		/////  MOVECHAR *****************************************************
+		public static void MoveChar (CharClass mob, enDirections direct = enDirections.None){
+			int newXpos = mob.Xpos;
+			int newYpos = mob.Ypos;  // initialize newXpos and newYpos
+
+			PrintChar (Tiles [mob.Xpos, mob.Ypos].Symbol, mob.Xpos, mob.Ypos);  ///Replace current character with map underneath it
+
+			switch (direct) {
+			case enDirections.None:
+				break;
+			case enDirections.North:
+				newYpos = mob.Ypos - 1;
+				break;
+			case enDirections.East:
+				newXpos = mob.Xpos + 1;  /// Change the newX or newYpos accordingly
+				break;
+			case enDirections.South:
+				newYpos = mob.Ypos + 1;
+				break;
+
+			case enDirections.West:
+				newXpos = mob.Xpos - 1;
+				break;
+			}
+
+			///Collision Detection ******************888
+			/// If a collision is detected, reset newX and newYpos to the characters position.  It effectively moves into its own square
+
+			if (newXpos < xLeft | newXpos >= xWidth | newYpos < yTop | newYpos >=yHeight){ // detect edges
+				newXpos = mob.Xpos;
+				newYpos = mob.Ypos;
+
+			}	else if (!Tiles [newXpos, newYpos].IsWalkable) {	 //////is it walkeable?
+				PrintMess ("You cannot walk there.");
+			} else if (Tiles [newXpos, newYpos].IsOccupied) {//////  is it occupied?
+				PrintMess2 ("Something is There.");
+			} else {
+				mob.Xpos = newXpos; // If nothing is collided with, change the characters position to newX and newYpos
+				mob.Ypos = newYpos;
+			}
+
+			PrintChar (mob);  //Finally, print the character
+		}// *******************************************END MOVECHAR**************************************8
+
+
+
+
+
+		/////Initialization///////////////////////////////////////
+		public static void Initialize (){
+			Console.CursorVisible = false;
+			chPlayer.Xpos = 22;
+			chPlayer.Ypos = 22;  //  Set the initial position and symbol of the player.
+			chPlayer.Symbol="t";
+
+		}
+		public static void LoadTiles(stTile[,] Tile){   /// fill the map with "."
+			for (int i = 0; i < Tile.GetLength(0); i++) {
+				for (int j = 0; j < Tile.GetLength(1); j++) {
+					Tile [i, j].Symbol = ".";
+					Tile [i, j].IsWalkable = true;
+				}
+			}
+			//////forexamples
+			Tile [10, 10].Symbol = "0";
+			Tile [10, 10].IsWalkable = false;
+			for (int i = 15; i<24; i++) {   ///  make a couple test objects on the map.
+				Tile [i, 7].Symbol = "|";
+				Tile [i, 7].IsWalkable = false;
+			}
+   		}
+
+		///    Primal Prints *************************************
+		public static void PrintChar (string stChar, int charXpos, int charYpos, ConsoleColor charcolor = ConsoleColor.White) {
+			Console.ForegroundColor = charcolor;
+			Console.SetCursorPosition (charXpos, charYpos);
+			Console.Write (stChar);							//   pass a string, x, y, [color]
+		}
+		public static void PrintChar (CharClass mob){		//  or pass a CharClass object
+			Console.SetCursorPosition (mob.Xpos, mob.Ypos);
+			Console.Write (mob.Symbol);
+		}
+		public static void PrintMess (string stMess, ConsoleColor messcolor = ConsoleColor.White){
+			for (int i = 0; i < Console.WindowWidth; i++) {   
+				PrintChar (" ", i, 0);    /// clear top line
+				PrintChar(stMess,(Console.WindowWidth/2)-(stMess.Length/2) ,0,messcolor);  /// center message
+			}
+		}
+		public static void PrintMess2 (string stMess, ConsoleColor messcolor = ConsoleColor.White){
+			for (int i = 0; i < Console.WindowWidth; i++) {   
+				PrintChar (" ", i, 1);    /// clear bottom line
+				PrintChar(stMess,(Console.WindowWidth/2)-(stMess.Length/2) ,1,messcolor);  /// center message
+			}
+		}
+		///***************************************************
+
+		////////////END of Game///////////////////////
+		public static void EndofGame(){
+			PrintMess ("Thanks for Playing!", ConsoleColor.DarkYellow);
+		}
+
+	
+
+	}
+}
+
+
+
