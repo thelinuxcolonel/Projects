@@ -1,0 +1,35 @@
+using System;
+
+namespace Testmove
+{
+
+
+	public class CharClass
+	{
+	
+		public int Xpos;
+		public int Ypos;
+		public string Symbol;
+
+
+		public CharClass ()
+		{
+			Symbol = "A";
+
+		}
+
+		public CharClass(int Xpos, int Ypos, string Symbol )
+		{
+			this.Xpos = Xpos;
+			this.Ypos = Ypos;
+			this.Symbol = Symbol;
+
+
+		}
+		public void DelSymbol (){
+
+		}
+	
+			}
+}
+
