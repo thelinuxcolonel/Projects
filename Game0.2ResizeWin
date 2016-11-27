@@ -1,0 +1,35 @@
+#undef sysLinux
+#define sysWin10
+
+using System;
+
+#if sysLinux
+using System.Runtime.InteropServices;
+#endif
+
+namespace gameproject
+{
+
+	class ConsoleResize
+	{
+#if sysLinux
+
+		[DllImport ("libc")]
+		private static extern int system (string exec);
+
+
+		public static void Execute (int X = 70, int Y =70)
+		{
+			string exString = String.Format("resize -s {0} {1} > /dev/null", Y, X);
+			system(exString);
+		}
+#elif sysWin10
+		public static void Execute (int X = 70, int Y = 70){
+			Console.SetWindowSize (X, Y);
+		}
+
+#else
+		// Different compiletime option
+#endif
+	}
+}
