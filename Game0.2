@@ -1,6 +1,8 @@
-using System;
 
-namespace Testmove
+using System;
+using System.Collections.Generic;
+
+namespace gameproject
 {
 	public enum enDirections {None, North, East, South, West}; // you can declare something as an enumDirections
 																
@@ -19,6 +21,8 @@ namespace Testmove
 	{
 		/// Static Declares **********
 
+		public static List<string> Messages = new List<string>();
+
 		static bool gameOn = true;
 		static CharClass chPlayer = new CharClass ();
 		//static CharClass[] chMob = new CharClass[];
@@ -29,12 +33,13 @@ namespace Testmove
 		static int yTop = 2;
 		static stTile[,] Tiles = new stTile[xWidth,yHeight];
 
+		public static int MessageTimer = 0;
 		//static CharClass chMob();
 
 
 		public static void Main (string[] args)  ////////////BEGIN
 		{
-			int Timer = 0;
+
 			int MsgDelay = 5000000;
 			Initialize();
 			LoadTiles (Tiles);
@@ -47,18 +52,24 @@ namespace Testmove
 
 				if (Console.KeyAvailable) {
 					//Stuff here happens when key is pressed
-					PressKey(Console.ReadKey (true));  ////  Read Keypress without printing it, send to PressKey
+					PressKey (Console.ReadKey (true));
+					{
+
+					}
+					  ////  Read Keypress without printing it, send to PressKey
 
 
 
 
 				}
 				///Stuff here happens in real time
-				Timer++;
-			if (Timer > MsgDelay){  /// When 'MsgDelay' number of loops have been executed:
-					Timer = 0;      ///  reset the timer and clear the message row.
+
+
+				MessageTimer++;
+			if (MessageTimer > MsgDelay){  /// When 'MsgDelay' number of loops have been executed:
+					MessageTimer = 0;      ///  reset the timer and clear the message row.
 					PrintMess ("");
-					PrintMess2 ("");
+					PrintMess2 ("");       //// change this to update message function
 				}
 			}////////////////////////////////////////////
 			EndofGame ();
@@ -73,31 +84,32 @@ namespace Testmove
 
 
 		///  PRESKEY *********************************************************
-		public static void PressKey(ConsoleKeyInfo keyInfo){  //read key input and pass it along.
+		public static int PressKey(ConsoleKeyInfo keyInfo){  //read key input and pass it along.
 			switch (keyInfo.Key) {
 			case ConsoleKey.Escape:
 				gameOn = false;
-				break;
+				return 0;
 			case ConsoleKey.LeftArrow:
 				MoveChar (chPlayer, enDirections.West);    ///  the MoveChar function takes (CharClass, and enumDirections)
-				break;										//  for arguments
+				return 1;										//  for arguments
 			case ConsoleKey.RightArrow:
 				MoveChar (chPlayer, enDirections.East);
-				break;
+				return 1;
 			case ConsoleKey.DownArrow:
 				MoveChar (chPlayer, enDirections.South);
-				break;
+				return 1;
 			case ConsoleKey.UpArrow:
 				MoveChar (chPlayer, enDirections.North);
-				break;
+				return 1;
 			case ConsoleKey.A :
 				PrintMess ("You can't attack, I haven't coded it yet.", ConsoleColor.Cyan);
-				break;
+				return 1;
 			case ConsoleKey.E:
 				Tiles [chPlayer.Xpos, chPlayer.Ypos].Symbol = " ";
 				PrintMess ("Yummy, you ate a dot!", ConsoleColor.Red);
-				break;
-		
+				return 1;
+			default :
+				return 0;
 			
 			}//**********************END PRESSKEY************************************
 		}
@@ -153,7 +165,7 @@ namespace Testmove
 			}	else if (!Tiles [newXpos, newYpos].IsWalkable) {	 //////is it walkeable?
 				PrintMess ("You cannot walk there.");
 			} else if (Tiles [newXpos, newYpos].IsOccupied) {//////  is it occupied?
-				PrintMess2 ("Something is There.");
+				PrintMess ("Something is There.");
 			} else {
 				mob.Xpos = newXpos; // If nothing is collided with, change the characters position to newX and newYpos
 				mob.Ypos = newYpos;
@@ -163,19 +175,68 @@ namespace Testmove
 		}// *******************************************END MOVECHAR**************************************8
 
 
+	
+
+		//   ///************MENU FUNCTIONALITY*******************************************
 
 
+		public static int callMenu (string[] MenuItems, bool canTerminate = false, int menuX = 3, int MenuY = 4, ConsoleColor SelColor = ConsoleColor.Yellow, ConsoleColor NormColor = ConsoleColor.White ){
+			int numSelected = 0;
+			ConsoleKeyInfo whichKey;
+			Console.Clear ();
+			PrintMenu (MenuItems,0,menuX,MenuY, SelColor, NormColor);
+			while (true) {
+				if (Console.KeyAvailable) {
+					//Stuff here happens when key is pressed
+					whichKey = Console.ReadKey (true);  ////  Read Keypress
+					switch (whichKey.Key) {
+					case ConsoleKey.UpArrow:
+						if (numSelected > 0) {
+							numSelected--;
+						} else {
+							numSelected = MenuItems.GetLength (0)-1;
+						}
+						break;
+					case ConsoleKey.DownArrow:
+						if (numSelected < MenuItems.GetLength (0)-1) {  // Move menu cursor up or down
+							numSelected++;
+						} else {
+							numSelected = 0;
+						}
+						break;
+					case ConsoleKey.Enter:
+						return numSelected;  // return selected number
 
-		/////Initialization///////////////////////////////////////
-		public static void Initialize (){
-			Console.CursorVisible = false;
-			chPlayer.Xpos = 22;
-			chPlayer.Ypos = 22;  //  Set the initial position and symbol of the player.
-			chPlayer.Symbol="t";
-
+					case ConsoleKey.Escape:
+						//if canTerminate == true, then pressing escape will close program
+						if (canTerminate) {
+							EndofGame ();
+						} else {
+							return -1;  ///  -1 == an escape command returned from function
+						}
+						break;
+					
+					}
+					PrintMenu (MenuItems,numSelected,menuX,MenuY, SelColor, NormColor);
+				}
+			}
 		}
+
+		public static void PrintMenu (string[] MenuItems, int numSelected=0,int menuX = 3, int MenuY = 4, ConsoleColor SelColor = ConsoleColor.Yellow, ConsoleColor NormColor = ConsoleColor.White ){
+						for (int i = 0; i < MenuItems.GetLength(0); i++){
+							if (numSelected == i) {
+								PrintChar(i+1 + " - " + MenuItems[i], menuX, MenuY+i, SelColor);
+							} else{
+								PrintChar(i+1 + " - " + MenuItems[i], menuX, MenuY+i, NormColor);
+							}
+						}
+					}
+
+		//************************************************************************
+		
 		public static void LoadTiles(stTile[,] Tile){   /// fill the map with "."
-			for (int i = 0; i < Tile.GetLength(0); i++) {
+			
+		for (int i = 0; i < Tile.GetLength(0); i++) {
 				for (int j = 0; j < Tile.GetLength(1); j++) {
 					Tile [i, j].Symbol = ".";
 					Tile [i, j].IsWalkable = true;
@@ -183,10 +244,10 @@ namespace Testmove
 			}
 			//////forexamples
 			Tile [10, 10].Symbol = "0";
-			Tile [10, 10].IsWalkable = false;
+			Tile [10, 10].IsOccupied = true;
 			for (int i = 15; i<24; i++) {   ///  make a couple test objects on the map.
-				Tile [i, 7].Symbol = "|";
-				Tile [i, 7].IsWalkable = false;
+				Tile [7, i].Symbol = "|";
+				Tile [7, i].IsWalkable = false;
 			}
    		}
 
@@ -202,22 +263,59 @@ namespace Testmove
 		}
 		public static void PrintMess (string stMess, ConsoleColor messcolor = ConsoleColor.White){
 			for (int i = 0; i < Console.WindowWidth; i++) {   
+				MessageTimer = 0;
 				PrintChar (" ", i, 0);    /// clear top line
 				PrintChar(stMess,(Console.WindowWidth/2)-(stMess.Length/2) ,0,messcolor);  /// center message
 			}
 		}
 		public static void PrintMess2 (string stMess, ConsoleColor messcolor = ConsoleColor.White){
-			for (int i = 0; i < Console.WindowWidth; i++) {   
+			for (int i = 0; i < Console.WindowWidth; i++) { 
+				MessageTimer = 0;
 				PrintChar (" ", i, 1);    /// clear bottom line
 				PrintChar(stMess,(Console.WindowWidth/2)-(stMess.Length/2) ,1,messcolor);  /// center message
 			}
 		}
+
+
+		public static void UpdateMessages(){
+		}
+
+
+		/////Initialization///////////////////////////////////////
+
+		public static void Initialize (){
+			string[] ClassList = {"Lizard Mage", "Robot Pirate", "Neptune Ninja", "Alien Ambassador", "Cosmic Clown"};
+			string[] RaceList = { "Human", "Wormuloid", "Space Yeti" };
+			string[] StartingPlanet = { "Earth", "Jupiter", "Utopia", "Planet X" };
+
+			ConsoleResize.Execute(100,40);
+
+
+			Console.CursorVisible = false;
+			chPlayer.Xpos = 22;
+			chPlayer.Ypos = 22;  //  Set the initial position and symbol of the player.
+			chPlayer.Symbol = "t";
+
+			callMenu (ClassList, true); 
+			callMenu (RaceList, true);
+			callMenu (StartingPlanet, true);
+		}
+
+
 		///***************************************************
 
 		////////////END of Game///////////////////////
 		public static void EndofGame(){
 			PrintMess ("Thanks for Playing!", ConsoleColor.DarkYellow);
+			Environment.Exit (0);
+		
 		}
+
+
+
+
+
+
 
 	
 
